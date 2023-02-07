@@ -11,7 +11,7 @@ export const runCompletion = async ({
     openaiApiKey: string
     config: any
 }) => {
-    const data = { prompt, ...config, provider: undefined }
+    const data = { prompt, ...config }
     try {
         const res = await fetch("https://api.openai.com/v1/completions", {
             method: "POST",

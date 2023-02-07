@@ -1,7 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
-import { useState } from "react"
-import { Button, Container, FormControl } from 'react-bootstrap';
+import browser from "webextension-polyfill";
+import { useEffect, useState } from "react"
+import { Button, Container } from 'react-bootstrap';
 import { runCompletion } from './openai';
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -39,31 +40,40 @@ Repeat the index and name of each tab as above, but add a new column after a \`|
 function domainFromUrl(url: string) {
   return new URL(url).hostname;
 }
+
+async function estimateCost() {
+  const tabNames = await getAllTabNames();
+  const tabList = tabNames.map((tabName, index) => `[${index + 1}] ${tabName}`).join("\n");
+  const prompt = getPrompt(tabList, "A generic command to close tabs");
+  const approxTokens = prompt.length / 4;
+  return `$${((2 * approxTokens / 1000) * 0.02).toFixed(3)}`
+}
+
 async function getAllTabNames() {
-  const tabs = await chrome.tabs.query({});
+  const tabs = await browser.tabs.query({});
   return tabs.map(tab => `${tab.title} | ${domainFromUrl(tab.url)}`);
 }
 
 function IndexPopup() {
   const [command, setCommand] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [openaiApiKey, setOpenaiApiKey] = useStorage("openaikey"); //TODO(rohan): Should use securestorage?
+  const [openaiApiKey, setOpenaiApiKey] = useStorage("openaikey", ""); //TODO(rohan): Should use securestorage?
+  const [cost, setCost] = useState("");
 
   const sendRequest = async (event) => {
     event.preventDefault();
     const tabNames = await getAllTabNames();
     const tabList = tabNames.map((tabName, index) => `[${index + 1}] ${tabName}`).join("\n");
     const prompt = getPrompt(tabList, command);
-    console.log(prompt);
     setIsLoading(true);
     const response = await runCompletion({
       openaiApiKey, prompt, config: {
         model: "text-davinci-003",
-        max_tokens: 1024,
+        max_tokens: 1800,
         temperature: 0.0,
-        //stopSequences: ["}"] // TODO(rohan): FIX
       }
     });
+    console.log(response);
     // regex to extract a number from response between [ and ]
     // then for each index, extract CLOSE or OPEN after the | at the end
     const indicesToClose = [];
@@ -79,19 +89,21 @@ function IndexPopup() {
         }
       }
     });
-    const tabs = await chrome.tabs.query({});
+    const tabs = await browser.tabs.query({});
     for (const index of indicesToClose) {
-      await chrome.tabs.remove(tabs[index - 1].id);
+      await browser.tabs.remove(tabs[index - 1].id);
     }
     setCommand("");
     setIsLoading(false);
     window.close();
   }
 
+  useEffect(() => {
+    estimateCost().then(setCost);
+  }, []);
+
+
   const disabled = !openaiApiKey || !command || isLoading;
-  if (!openaiApiKey) {
-    return null;
-  }
 
   return (
     <Container className="p-4" style={{ width: "500px" }}>
@@ -111,6 +123,7 @@ function IndexPopup() {
           disabled={disabled}
           variant="primary"
           type="submit">{isLoading ? 'Loading...' : 'Run'}</Button>
+        <p className="text-muted">Approx cost: {cost}</p>
       </Form>
     </Container>
   );

@@ -8,6 +8,7 @@ specifiers:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/webextension-polyfill': ^0.10.0
   bootstrap: ^5.2.3
   plasmo: 0.64.5
   prettier: 2.8.3
@@ -15,6 +16,7 @@ specifiers:
   react-bootstrap: ^2.7.0
   react-dom: 18.2.0
   typescript: 4.9.4
+  webextension-polyfill: ^0.10.0
 
 dependencies:
   '@plasmohq/storage': 1.0.4_react@18.2.0
@@ -24,6 +26,7 @@ dependencies:
   react: 18.2.0
   react-bootstrap: 2.7.0_5ndqzdd6t4rivxsukjv3i3ak2q
   react-dom: 18.2.0_react@18.2.0
+  webextension-polyfill: 0.10.0
 
 devDependencies:
   '@plasmohq/prettier-plugin-sort-imports': 3.6.1_prettier@2.8.3
@@ -31,6 +34,7 @@ devDependencies:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/webextension-polyfill': 0.10.0
   prettier: 2.8.3
   typescript: 4.9.4
 
@@ -2194,7 +2198,6 @@ packages:
 
   /@types/webextension-polyfill/0.10.0:
     resolution: {integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==}
-    dev: false
 
   /@vue/compiler-core/3.2.45:
     resolution: {integrity: sha512-rcMj7H+PYe5wBV3iYeUgbCglC+pbpN8hBLTJvRiK2eKQiWqu+fG9F+8sW99JdL4LQi7Re178UOxn09puSXvn4A==}
