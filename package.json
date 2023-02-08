@@ -33,7 +33,7 @@
   "manifest": {
     "browser_specific_settings": {
       "gecko": {
-        "id": "roresemail@gmail.com"
+        "id": "tabgpt-tempid@example.com"
       }
     },
     "host_permissions": [
