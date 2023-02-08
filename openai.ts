@@ -1,3 +1,5 @@
+import { parseJsonSSE } from "./parseJSONSSE"
+
 export const runCompletion = async ({
     prompt,
     openaiApiKey,
@@ -28,4 +30,47 @@ export const runCompletion = async ({
     } catch (e) {
         console.error(e)
     }
+}
+
+
+export const streamCompletion = async (args: {
+    data: {
+        prompt: string
+        openaiApiKey: string
+        config: any
+    }
+    onMessage: (completion: string) => void
+    onError: (err: string) => void
+    onClose: () => void
+}) => {
+    const { data, onMessage, onClose } = args
+
+    const openaiApiKey = data.openaiApiKey
+    const payload = {
+        prompt: data.prompt,
+        stream: true,
+        ...data.config
+    }
+
+    console.log("STREAMING WITH PAYLOAD", payload)
+
+    const res = await fetch("https://api.openai.com/v1/completions", {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${openaiApiKey}`,
+        },
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+
+    parseJsonSSE({
+        data: res.body,
+        onParse: (obj) => {
+            onMessage(
+                //@ts-ignore
+                obj.choices?.[0].text
+            )
+        },
+        onFinish: onClose
+    })
 }
