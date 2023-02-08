@@ -1,7 +1,11 @@
 # TabGPT
 ## Close tabs with precision using GPT3
 
-TabGPT is a browser extension (tested on Chrome and Firefox) that allows you to use natural language to close unwanted tabs. Check out these videos for inspiration:
+TabGPT is a browser extension (tested on Chrome and Firefox) that allows you to use natural language to close unwanted tabs. Here'a video of TabGPT in action:
+
+https://user-images.githubusercontent.com/34352/217678133-0320056c-5886-412b-8e9e-e883a097d3d3.mov
+
+
 
 ### Current status
 
