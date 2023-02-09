@@ -54,4 +54,4 @@ For further guidance, [visit Plasmo's Documentation](https://docs.plasmo.com/).
 ## Gratitude
 Thanks to [Promptable.ai](https://github.com/promptable) and the [gpt3-chrome-starter](https://github.com/promptable/gpt3-chrome-starter) for the openai streaming and completion code.
 
-Also thanks to all the other open source projects that made this possible.
+Also thanks to the myriad of open source projects that made this possible.
